@@ -1,44 +1,50 @@
 """Jason Stys: strict parser boundaries, pseudonym privacy and hostile bounded JSONL/property cases."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# variable: KEY — line 52
-# variable: AT — line 53
-# definition: sample — line 56
-# definition: test_bad_clock — line 78
-# parameter: value — line 78
-# definition: test_equivalent_clock — line 84
-# definition: test_bad_text — line 90
-# parameter: value — line 90
-# definition: test_bad_counter — line 97
-# parameter: value — line 97
-# definition: test_bad_policy — line 118
-# parameter: value — line 118
-# definition: test_bad_health_shape — line 125
-# parameter: value — line 125
-# definition: test_health_fields — line 131
-# variable: item — line 133
-# definition: test_bad_alert_envelope — line 152
-# parameter: field — line 152
-# parameter: value — line 152
-# variable: item — line 154
-# definition: test_missing_envelope — line 161
-# parameter: value — line 161
-# definition: test_syscall_identity — line 167
-# variable: item — line 169
-# variable: first — line 175
-# variable: pid — line 178
-# definition: test_privacy_allowlist_and_key — line 184
-# variable: item — line 186
-# variable: model — line 187
-# definition: test_alias_property — line 204
-# parameter: value — line 204
-# variable: first — line 206
-# definition: test_bad_json — line 216
-# parameter: data — line 216
-# definition: test_files_and_caps — line 222
-# parameter: monkeypatch — line 222
-# parameter: tmp_path — line 222
-# variable: path — line 224
-# parameter: self — line 246
+# variable: KEY — line 58
+# variable: AT — line 59
+# definition: sample — line 62
+# definition: test_bad_clock — line 84
+# parameter: value — line 84
+# definition: test_equivalent_clock — line 90
+# definition: test_bad_text — line 96
+# parameter: value — line 96
+# definition: test_bad_counter — line 103
+# parameter: value — line 103
+# definition: test_bad_policy — line 124
+# parameter: value — line 124
+# definition: test_bad_health_shape — line 131
+# parameter: value — line 131
+# definition: test_health_fields — line 137
+# variable: item — line 139
+# definition: test_bad_alert_envelope — line 158
+# parameter: field — line 158
+# parameter: value — line 158
+# variable: item — line 160
+# definition: test_missing_envelope — line 167
+# parameter: value — line 167
+# definition: test_syscall_identity — line 173
+# variable: item — line 175
+# variable: first — line 181
+# variable: pid — line 184
+# definition: test_privacy_allowlist_and_key — line 190
+# variable: item — line 192
+# variable: model — line 193
+# definition: test_optional_native_metadata — line 205
+# parameter: field — line 205
+# parameter: value — line 205
+# variable: item — line 207
+# definition: test_optional_metadata_wrong_types — line 213
+# parameter: value — line 213
+# definition: test_alias_property — line 226
+# parameter: value — line 226
+# variable: first — line 228
+# definition: test_bad_json — line 238
+# parameter: data — line 238
+# definition: test_files_and_caps — line 244
+# parameter: monkeypatch — line 244
+# parameter: tmp_path — line 244
+# variable: path — line 246
+# parameter: self — line 268
 # END CODE MAP
 
 from pathlib import Path
@@ -192,6 +198,22 @@ def test_privacy_allowlist_and_key() -> None:
     item["output_fields"].pop("ka.target.namespace")
     item["output_fields"].pop("ka.target.name")
     assert c.parse_alert(item, KEY).namespace.startswith("scope-")
+
+
+@pytest.mark.parametrize("field", ["ka.target.namespace", "ka.target.name"])
+@pytest.mark.parametrize("value", [None, ""])
+def test_optional_native_metadata(field: str, value: object) -> None:
+    """Actual Falco missing optional fields can be null/empty, but do not prove cluster scope or object identity."""
+    item = sample()
+    item["output_fields"][field] = value
+    assert c.parse_alert(item, KEY).namespace.startswith("scope-")
+
+
+@pytest.mark.parametrize("value", [False, 0, 1, [], {}, "bad\ntext"])
+def test_optional_metadata_wrong_types(value: object) -> None:
+    """Do not convert arbitrary falsy metadata into unavailable labels."""
+    with pytest.raises(ValueError):
+        c.optional_text(value, "unavailable")
 
 
 @given(

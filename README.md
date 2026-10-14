@@ -17,18 +17,18 @@ A defensive lab combining real **Falco** rule evaluation with typed, privacy-min
 
 Python 3.12+; no third-party runtime dependencies. This does not start Docker, capture your host, install a driver or contact any server.
 
-[BT][BT][BT]powershell
+```powershell
 New-Item -ItemType Directory -Force out
 python -m runtime_lab.cli --alerts examples/alerts.jsonl --health examples/health.json --policy examples/policy.json --as-of 2026-10-14T00:00:00Z --output out/review-01
-[BT][BT][BT]
+```
 
-The synthetic sample deliberately returns **1** (three alerts need review), not a software failure. Open [BT]out/review-01/review.html[BT] locally. Status 0=declared complete coverage/no alerts; 1=alerts or gaps; 2=input/operational error. **Status 0 is not proof of safety.**
+The synthetic sample deliberately returns **1** (three alerts need review), not a software failure. Open `out/review-01/review.html` locally. Status 0=declared complete coverage/no alerts; 1=alerts or gaps; 2=input/operational error. **Status 0 is not proof of safety.**
 
 ## Development
 
-Install hash-locked dev dependencies in a virtual environment: [BT]python -m pip install --require-hashes -r requirements-dev.lock[BT]. Run [BT]python -m pytest --cov=runtime_lab[BT], [BT]python -m ruff check .[BT], [BT]python -m mypy[BT], and [BT]python scripts/benchmark.py[BT] with repo root on PYTHONPATH. Raw data and native outputs belong only in ignored private folders.
+Install hash-locked dev dependencies in a virtual environment: `python -m pip install --require-hashes -r requirements-dev.lock`. Run `python -m pytest --cov=runtime_lab`, `python -m ruff check .`, `python -m mypy`, and `python scripts/benchmark.py` with repo root on PYTHONPATH. Raw data and native outputs belong only in ignored private folders.
 
-Native Linux tooling: [BT]python scripts/native_tools.py[BT] installs reviewed official artifacts **repo-locally**, without execution. Offline Falco replay: [BT]PYTHONPATH=. python scripts/native.py replay[BT]. Live monitoring is restricted by a guard to disposable Linux GitHub runners; it never runs on your PC as part of these instructions.
+Native Linux tooling: `python scripts/native_tools.py` installs reviewed official artifacts **repo-locally**, without execution. Offline Falco replay: `PYTHONPATH=. python scripts/native.py replay`. Live monitoring is restricted by a guard to disposable Linux GitHub runners; it never runs on your PC as part of these instructions.
 
 ## Documentation
 

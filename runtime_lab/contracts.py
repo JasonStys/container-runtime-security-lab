@@ -1,92 +1,95 @@
 """Jason Stys: bounded JSONL, exact policy/health types, UTC clocks and pseudonymized Falco alert contracts."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# variable: MAX_LINE — line 102
-# variable: MAX_EVENTS — line 103
-# variable: MAX_BYTES — line 104
-# variable: CATALOG — line 105
-# variable: PRIORITIES — line 115
-# definition: Alert — line 128
-# variable: event — line 131
-# variable: source — line 132
-# variable: rule — line 133
-# variable: priority — line 134
-# variable: time — line 135
-# variable: namespace — line 136
-# variable: subject — line 137
-# definition: Health — line 141
-# variable: source — line 144
-# variable: last_seen — line 145
-# variable: received — line 146
-# variable: dropped — line 147
-# variable: complete — line 148
-# definition: Policy — line 152
-# variable: sources — line 155
-# variable: max_age_seconds — line 156
-# definition: clock — line 159
-# parameter: value — line 159
-# variable: parsed — line 164
-# definition: text — line 172
-# parameter: maximum — line 172
-# parameter: value — line 172
-# variable: char — line 177
-# definition: fields — line 183
-# parameter: required — line 183
-# parameter: value — line 183
-# definition: count — line 190
-# parameter: upper — line 190
-# parameter: value — line 190
-# definition: source — line 197
-# parameter: value — line 197
-# definition: alias — line 204
-# parameter: key — line 204
-# parameter: kind — line 204
-# parameter: value — line 204
-# definition: parse_policy — line 215
-# parameter: value — line 215
-# variable: data — line 217
-# variable: item — line 220
-# variable: sources — line 220
-# variable: age — line 221
-# definition: parse_health — line 227
-# parameter: value — line 227
-# variable: observations — line 231
-# variable: item — line 232
-# variable: data — line 233
-# variable: item — line 245
-# definition: parse_alert — line 250
-# parameter: key — line 250
-# parameter: value — line 250
-# variable: origin — line 260
-# variable: rule — line 261
-# variable: priority — line 262
-# variable: output — line 265
-# variable: event_id — line 269
-# variable: namespace — line 270
-# variable: subject — line 271
-# variable: container — line 274
-# variable: pid — line 275
-# variable: event_id — line 278
-# variable: namespace — line 279
-# variable: subject — line 280
-# definition: unique_pairs — line 292
-# parameter: pairs — line 292
-# variable: result — line 294
-# variable: name — line 295
-# variable: value — line 295
-# definition: reject_constant — line 302
-# parameter: value — line 302
-# definition: decode — line 307
-# parameter: data — line 307
-# definition: read_records — line 321
-# parameter: path — line 321
-# variable: records — line 325
-# variable: consumed — line 326
-# variable: stream — line 327
-# variable: line — line 328
-# variable: consumed — line 329
-# definition: read_config — line 341
-# parameter: path — line 341
-# variable: stream — line 345
+# variable: MAX_LINE — line 105
+# variable: MAX_EVENTS — line 106
+# variable: MAX_BYTES — line 107
+# variable: CATALOG — line 108
+# variable: PRIORITIES — line 118
+# definition: Alert — line 131
+# variable: event — line 134
+# variable: source — line 135
+# variable: rule — line 136
+# variable: priority — line 137
+# variable: time — line 138
+# variable: namespace — line 139
+# variable: subject — line 140
+# definition: Health — line 144
+# variable: source — line 147
+# variable: last_seen — line 148
+# variable: received — line 149
+# variable: dropped — line 150
+# variable: complete — line 151
+# definition: Policy — line 155
+# variable: sources — line 158
+# variable: max_age_seconds — line 159
+# definition: clock — line 162
+# parameter: value — line 162
+# variable: parsed — line 167
+# definition: text — line 175
+# parameter: maximum — line 175
+# parameter: value — line 175
+# variable: char — line 180
+# definition: fields — line 186
+# parameter: required — line 186
+# parameter: value — line 186
+# definition: count — line 193
+# parameter: upper — line 193
+# parameter: value — line 193
+# definition: source — line 200
+# parameter: value — line 200
+# definition: alias — line 207
+# parameter: key — line 207
+# parameter: kind — line 207
+# parameter: value — line 207
+# definition: parse_policy — line 218
+# parameter: value — line 218
+# variable: data — line 220
+# variable: item — line 223
+# variable: sources — line 223
+# variable: age — line 224
+# definition: parse_health — line 230
+# parameter: value — line 230
+# variable: observations — line 234
+# variable: item — line 235
+# variable: data — line 236
+# variable: item — line 248
+# definition: optional_text — line 253
+# parameter: fallback — line 253
+# parameter: value — line 253
+# definition: parse_alert — line 258
+# parameter: key — line 258
+# parameter: value — line 258
+# variable: origin — line 268
+# variable: rule — line 269
+# variable: priority — line 270
+# variable: output — line 273
+# variable: event_id — line 277
+# variable: namespace — line 278
+# variable: subject — line 281
+# variable: container — line 284
+# variable: pid — line 285
+# variable: event_id — line 288
+# variable: namespace — line 289
+# variable: subject — line 290
+# definition: unique_pairs — line 302
+# parameter: pairs — line 302
+# variable: result — line 304
+# variable: name — line 305
+# variable: value — line 305
+# definition: reject_constant — line 312
+# parameter: value — line 312
+# definition: decode — line 317
+# parameter: data — line 317
+# definition: read_records — line 331
+# parameter: path — line 331
+# variable: records — line 335
+# variable: consumed — line 336
+# variable: stream — line 337
+# variable: line — line 338
+# variable: consumed — line 339
+# definition: read_config — line 351
+# parameter: path — line 351
+# variable: stream — line 355
 # END CODE MAP
 
 from __future__ import annotations
@@ -247,6 +250,11 @@ def parse_health(value: object) -> tuple[Health, ...]:
     return tuple(observations)
 
 
+def optional_text(value: object, fallback: str) -> str:
+    """Only missing/null/empty optional metadata gets an unavailable label; malformed types still fail."""
+    return fallback if value is None or value == "" else text(value)
+
+
 def parse_alert(value: object, key: bytes) -> Alert:
     """Extract allowlisted fields only from Falco JSON; extra envelope/field values never enter reports."""
     if not isinstance(value, dict) or not {
@@ -267,8 +275,10 @@ def parse_alert(value: object, key: bytes) -> Alert:
         raise ValueError("Falco output_fields must be an object")
     if origin == "k8s_audit":
         event_id = text(output.get("ka.auditid"), 128)
-        namespace = text(output.get("ka.target.namespace", "cluster-scope"))
-        subject = text(output.get("ka.target.name", "unknown-object"))
+        namespace = optional_text(
+            output.get("ka.target.namespace"), "scope-unavailable"
+        )
+        subject = optional_text(output.get("ka.target.name"), "unknown-object")
     else:
         # A syscall event has no Kubernetes auditID. Keying by native event time + container + PID avoids cross-container merging.
         container = text(output.get("container.id"), 128)

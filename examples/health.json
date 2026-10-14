@@ -1,0 +1,4 @@
+[
+  {"source":"k8s_audit","last_seen":"2026-10-14T00:00:00Z","received":27,"dropped":0,"complete":true},
+  {"source":"syscall","last_seen":"2026-10-14T00:00:00Z","received":20,"dropped":0,"complete":true}
+]

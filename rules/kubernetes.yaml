@@ -1,0 +1,117 @@
+# Jason Stys: scoped Kubernetes API detections, successful response stages only; no secret bodies or actors output.
+# BEGIN CODE MAP (generated; python scripts/code_map.py)
+# parameter: macro — line 70
+# parameter: condition — line 71
+# parameter: macro — line 72
+# parameter: condition — line 73
+# parameter: macro — line 74
+# parameter: condition — line 75
+# parameter: rule — line 76
+# parameter: desc — line 77
+# parameter: condition — line 78
+# parameter: source — line 79
+# parameter: output — line 80
+# shell variable: audit — line 80
+# shell variable: namespace — line 80
+# shell variable: object — line 80
+# parameter: priority — line 81
+# parameter: tags — line 82
+# parameter: rule — line 83
+# parameter: desc — line 84
+# parameter: condition — line 85
+# parameter: source — line 86
+# parameter: output — line 87
+# shell variable: audit — line 87
+# shell variable: namespace — line 87
+# shell variable: object — line 87
+# parameter: priority — line 88
+# parameter: tags — line 89
+# parameter: rule — line 90
+# parameter: desc — line 91
+# parameter: condition — line 92
+# parameter: source — line 93
+# parameter: output — line 94
+# shell variable: audit — line 94
+# shell variable: namespace — line 94
+# shell variable: object — line 94
+# parameter: priority — line 95
+# parameter: tags — line 96
+# parameter: rule — line 97
+# parameter: desc — line 98
+# parameter: condition — line 99
+# parameter: source — line 100
+# parameter: output — line 101
+# shell variable: audit — line 101
+# shell variable: namespace — line 101
+# shell variable: object — line 101
+# parameter: priority — line 102
+# parameter: tags — line 103
+# parameter: rule — line 104
+# parameter: desc — line 105
+# parameter: condition — line 106
+# parameter: source — line 107
+# parameter: output — line 108
+# shell variable: audit — line 108
+# shell variable: namespace — line 108
+# shell variable: object — line 108
+# parameter: priority — line 109
+# parameter: tags — line 110
+# parameter: rule — line 111
+# parameter: desc — line 112
+# parameter: condition — line 113
+# parameter: source — line 114
+# parameter: output — line 115
+# shell variable: audit — line 115
+# shell variable: namespace — line 115
+# shell variable: object — line 115
+# parameter: priority — line 116
+# parameter: tags — line 117
+# END CODE MAP
+- macro: crsl_scope
+  condition: (ka.target.namespace = crsl-lab or (ka.target.resource = clusterroles and ka.target.name startswith crsl-))
+- macro: crsl_success
+  condition: (ka.stage in (ResponseComplete, ResponseStarted) and (ka.response.code startswith "2" or ka.response.code = "101"))
+- macro: crsl_pod_mutation
+  condition: (crsl_scope and crsl_success and ka.target.resource = pods and ka.verb in (create, update, patch))
+- rule: CRSL Privileged Pod
+  desc: Successful pod mutation requested a privileged regular, init or ephemeral container; not proof of execution.
+  condition: crsl_pod_mutation and (ka.req.pod.containers.privileged intersects (true) or ka.req.pod.initContainers.privileged intersects (true) or ka.req.pod.ephemeralContainers.privileged intersects (true))
+  source: k8s_audit
+  output: "CRSL audit=%ka.auditid namespace=%ka.target.namespace object=%ka.target.name"
+  priority: Warning
+  tags: [crsl, privileged]
+- rule: CRSL Host Namespace
+  desc: Successful pod mutation requested host PID, IPC or network namespace sharing.
+  condition: crsl_pod_mutation and (ka.req.pod.host_pid = true or ka.req.pod.host_ipc = true or ka.req.pod.host_network = true)
+  source: k8s_audit
+  output: "CRSL audit=%ka.auditid namespace=%ka.target.namespace object=%ka.target.name"
+  priority: Warning
+  tags: [crsl, host-namespace]
+- rule: CRSL HostPath Mount
+  desc: Successful pod mutation requested an exact sensitive hostPath from the documented list; not a prefix/escape detector.
+  condition: crsl_pod_mutation and ka.req.pod.volumes.hostpath intersects (/, /etc, /proc, /sys, /var/run/docker.sock, /run/containerd/containerd.sock)
+  source: k8s_audit
+  output: "CRSL audit=%ka.auditid namespace=%ka.target.namespace object=%ka.target.name"
+  priority: Warning
+  tags: [crsl, hostpath]
+- rule: CRSL Pod Exec
+  desc: Successful exec/attach API request in the lab namespace; does not establish what command ran.
+  condition: crsl_scope and crsl_success and ka.target.resource = pods and ka.target.subresource in (exec, attach) and ka.verb in (create, get)
+  source: k8s_audit
+  output: "CRSL audit=%ka.auditid namespace=%ka.target.namespace object=%ka.target.name"
+  priority: Notice
+  tags: [crsl, interactive]
+- rule: CRSL Secret Read
+  desc: Successful secret get/list/watch in the lab namespace; output contains metadata only, never secret contents.
+  condition: crsl_scope and crsl_success and ka.target.resource = secrets and ka.verb in (get, list, watch)
+  source: k8s_audit
+  output: "CRSL audit=%ka.auditid namespace=%ka.target.namespace object=%ka.target.name"
+  priority: Warning
+  tags: [crsl, secret-read]
+- rule: CRSL Wildcard Role
+  desc: Successful Role/ClusterRole mutation requested wildcard resources or verbs; not effective RBAC evaluation.
+  condition: crsl_scope and crsl_success and ka.target.resource in (roles, clusterroles) and ka.verb in (create, update, patch) and (ka.req.role.rules.resources intersects ("*") or ka.req.role.rules.verbs intersects ("*"))
+  source: k8s_audit
+  output: "CRSL audit=%ka.auditid namespace=%ka.target.namespace object=%ka.target.name"
+  priority: Warning
+  tags: [crsl, wildcard-rbac]

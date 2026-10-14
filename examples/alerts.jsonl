@@ -1,0 +1,3 @@
+{"time":"2026-10-14T00:00:00Z","rule":"CRSL Privileged Pod","priority":"Warning","source":"k8s_audit","output_fields":{"ka.auditid":"synthetic-event-1","ka.target.namespace":"crsl-lab","ka.target.name":"synthetic-workload"}}
+{"time":"2026-10-14T00:00:00Z","rule":"CRSL Secret Read","priority":"Warning","source":"k8s_audit","output_fields":{"ka.auditid":"synthetic-event-2","ka.target.namespace":"crsl-lab","ka.target.name":"fake-secret"}}
+{"time":"2026-10-14T00:00:00Z","rule":"CRSL Marker Read","priority":"Warning","source":"syscall","output_fields":{"proc.pid":1234,"container.id":"synthetic-container-1","fd.name":"/tmp/crsl-sensitive-marker"}}

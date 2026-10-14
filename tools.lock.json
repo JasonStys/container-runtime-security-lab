@@ -1,0 +1,10 @@
+{
+  "reviewed": "2026-10-14",
+  "falco": {"version":"0.45.0","url":"https://download.falco.org/packages/bin/x86_64/falco-0.45.0-x86_64.tar.gz","sha256":"6c8c591089db4ccf815c1761be28109b46f2c14d462a8414abcdd282249aeefe"},
+  "k8saudit": {"version":"0.18.0","repository":"falcosecurity/plugins/plugin/k8saudit","manifest":"sha256:ecfeb737816523d949660404d7a1a4a1dbcaecf785bfb84a1c48a06e899ebb85","layer":"sha256:180046ef8a1cf49fb042d86a51dc2a01e1fd19cc9b31a469bcca2272c2e0abcb"},
+  "probe_image": "busybox:1.37.0@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e",
+  "tools": {
+    "gitleaks":{"version":"8.30.1","url":"https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz","sha256":"551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"},
+    "actionlint":{"version":"1.7.12","url":"https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz","sha256":"8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"}
+  }
+}

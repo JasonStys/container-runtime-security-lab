@@ -1,0 +1,39 @@
+# Jason Stys: offline Kubernetes audit JSONL replay, no listener, no syscall capture or external outputs.
+# BEGIN CODE MAP (generated; python scripts/code_map.py)
+# parameter: json_output — line 22
+# parameter: rule_matching — line 23
+# parameter: json_include_output_property — line 24
+# parameter: json_include_tags_property — line 25
+# parameter: time_format_iso_8601 — line 26
+# parameter: buffered_outputs — line 27
+# parameter: log_stderr — line 28
+# parameter: log_syslog — line 29
+# parameter: stdout_output — line 30
+# parameter: enabled — line 31
+# parameter: webserver — line 32
+# parameter: enabled — line 33
+# parameter: plugins — line 34
+# parameter: name — line 35
+# parameter: library_path — line 36
+# parameter: init_config — line 37
+# parameter: open_params — line 38
+# parameter: load_plugins — line 39
+# END CODE MAP
+json_output: true
+rule_matching: all
+json_include_output_property: false
+json_include_tags_property: true
+time_format_iso_8601: true
+buffered_outputs: false
+log_stderr: true
+log_syslog: false
+stdout_output:
+  enabled: true
+webserver:
+  enabled: false
+plugins:
+  - name: k8saudit
+    library_path: .tools/libk8saudit.so
+    init_config: '{"useAsync":false,"maxEventSize":65536}'
+    open_params: out/audit.jsonl
+load_plugins: [k8saudit]

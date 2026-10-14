@@ -1,0 +1,37 @@
+# Jason Stys: live CI-only fake marker probes; narrowly scoped demonstrations, not production secret/config detection.
+# BEGIN CODE MAP (generated; python scripts/code_map.py)
+# parameter: rule — line 24
+# parameter: desc — line 25
+# parameter: condition — line 26
+# parameter: source — line 27
+# parameter: output — line 28
+# shell variable: container — line 28
+# shell variable: marker — line 28
+# shell variable: pid — line 28
+# parameter: priority — line 29
+# parameter: tags — line 30
+# parameter: rule — line 31
+# parameter: desc — line 32
+# parameter: condition — line 33
+# parameter: source — line 34
+# parameter: output — line 35
+# shell variable: container — line 35
+# shell variable: marker — line 35
+# shell variable: pid — line 35
+# parameter: priority — line 36
+# parameter: tags — line 37
+# END CODE MAP
+- rule: CRSL Marker Read
+  desc: Container read of an explicitly synthetic marker proves runtime capture and rule evaluation, never real credential access.
+  condition: evt.type in (open, openat, openat2) and evt.dir = < and evt.failed = false and evt.is_open_read = true and container.id != host and fd.name = /tmp/crsl-sensitive-marker
+  source: syscall
+  output: "CRSL container=%container.id pid=%proc.pid marker=%fd.name"
+  priority: Warning
+  tags: [crsl, synthetic-read]
+- rule: CRSL Marker Write
+  desc: Container write to an explicitly synthetic config marker; not a general filesystem-tampering rule.
+  condition: evt.type in (open, openat, openat2) and evt.dir = < and evt.failed = false and evt.is_open_write = true and container.id != host and fd.name = /tmp/crsl-config-marker
+  source: syscall
+  output: "CRSL container=%container.id pid=%proc.pid marker=%fd.name"
+  priority: Warning
+  tags: [crsl, synthetic-write]

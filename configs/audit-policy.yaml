@@ -1,0 +1,51 @@
+# Jason Stys: illustrative isolated-cluster audit policy; never applied to an existing cluster by this project.
+# BEGIN CODE MAP (generated; python scripts/code_map.py)
+# parameter: apiVersion — line 27
+# parameter: kind — line 28
+# parameter: omitStages — line 29
+# parameter: rules — line 30
+# parameter: level — line 32
+# parameter: namespaces — line 33
+# parameter: resources — line 34
+# parameter: group — line 35
+# parameter: resources — line 36
+# parameter: level — line 38
+# parameter: namespaces — line 39
+# parameter: verbs — line 40
+# parameter: resources — line 41
+# parameter: group — line 42
+# parameter: resources — line 43
+# parameter: group — line 44
+# parameter: resources — line 45
+# parameter: level — line 46
+# parameter: verbs — line 47
+# parameter: resources — line 48
+# parameter: group — line 49
+# parameter: resources — line 50
+# parameter: level — line 51
+# END CODE MAP
+apiVersion: audit.k8s.io/v1
+kind: Policy
+omitStages: [RequestReceived]
+rules:
+  # Secrets are Metadata only: never request/response bodies.
+  - level: Metadata
+    namespaces: [crsl-lab]
+    resources:
+      - group: ""
+        resources: [secrets, pods/exec, pods/attach]
+  # Request bodies are needed for pod/Role conditions; real command/env values may be sensitive.
+  - level: Request
+    namespaces: [crsl-lab]
+    verbs: [create, update, patch]
+    resources:
+      - group: ""
+        resources: [pods, pods/ephemeralcontainers]
+      - group: rbac.authorization.k8s.io
+        resources: [roles]
+  - level: Request
+    verbs: [create, update, patch]
+    resources:
+      - group: rbac.authorization.k8s.io
+        resources: [clusterroles]
+  - level: None

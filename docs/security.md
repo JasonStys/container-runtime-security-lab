@@ -15,3 +15,5 @@ Artifacts: official HTTPS Falco tar is manually reviewed and digest-pinned; offi
 No listener, external alert forwarding, user accounts, public multiuser application, production cluster or PC security changes. Audit policy is illustrative; secret Metadata first prevents secret bodies. Request-level pod logs can still contain sensitive env/commands, so never apply broadly without owner/privacy review.
 
 Public evidence is synthetic or summary-only. Do not attach real audit/alert streams to public issues. See SECURITY.md for reporting.
+
+Raw native metrics can include runner hostname/network metadata even with optional utilization counters disabled. Metrics stay in ignored out/ on the disposable runner; only allowlisted numeric counter summaries are printed/published. Kernel/output counter sampling must span fixture completion; it is not authenticated whole-host evidence.

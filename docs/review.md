@@ -9,3 +9,5 @@ Release gates: local unit/property/CLI/style/types/structural checks, exact trac
 No production deployment, migration, cloud account or privileged PC installation. Native authority only on disposable CI; no cluster applied. Rollback/cleanup affects only explicitly owned ephemeral fixture. See runbook.
 
 Public reports cite immutable accepted implementation SHA/run/job IDs; final documentation push reruns the same gates. Account Actions billing details stay out of public source.
+
+Corrections strengthened native integration rather than changing detector expectations: installation-relative plugin lookup replaced with explicit verified absolute paths; missing/null/empty optional native metadata normalized to unavailable rather than assuming cluster scope; explicit container-engine configuration includes the required disabled BPM entry; documented JSON metrics replace absent legacy text counters while keeping missing/positive drop evidence a failure. Regression tests cover each boundary.

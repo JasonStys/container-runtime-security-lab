@@ -8,6 +8,8 @@ Structural YAML tests check rule catalog/output privacy, secret Metadata audit p
 
 Independent native Linux lane: hash verification, actual Falco rule validation, 27 exact synthetic Kubernetes audit replay outcomes, actual modern-eBPF container read/write detections and no-network benign controls, native alert contract compatibility and drop evidence. No local PC monitoring.
 
+Drop evidence uses documented JSON metrics, not optional legacy text summaries: require numeric kernel event/drop and output-queue counters, nonzero captured events, zero observed drops, and at least one sample after fixture completion. Missing/null/bool counters, positive drops, no events and insufficient time coverage have negative regression tests.
+
 CI matrix: Ubuntu 24.04 Python 3.12/3.14; Windows Python 3.14; macOS Intel Python 3.14. Ruff/mypy, exact code/file indexes, input/privacy/storage guards, complete Python dependency audit, Gitleaks/actionlint and security-extended CodeQL.
 
 Combined Python runtime statement/branch coverage gate 95%; scripts/native binaries/rules/Bash/kernel coverage not included. Native observations are reported separately. Property tests are bounded; passing tests are not complete security proof.

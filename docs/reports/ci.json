@@ -1,0 +1,100 @@
+{
+  "author": "Jason Stys",
+  "accepted_commit": "7e8ea751b900d4b5869cd6082773f78790965788",
+  "workflows": [
+    {
+      "id": 38632090515,
+      "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 116085994906,
+          "name": "Native Falco replay + live container capture",
+          "conclusion": "success",
+          "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515/job/116085994906"
+        },
+        {
+          "id": 116085995330,
+          "name": "Runtime evidence / macos-15-intel / 3.14",
+          "conclusion": "success",
+          "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515/job/116085995330"
+        },
+        {
+          "id": 116085995515,
+          "name": "Runtime evidence / windows-latest / 3.14",
+          "conclusion": "success",
+          "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515/job/116085995515"
+        },
+        {
+          "id": 116085995533,
+          "name": "Runtime evidence / ubuntu-24.04 / 3.12",
+          "conclusion": "success",
+          "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515/job/116085995533"
+        },
+        {
+          "id": 116085995613,
+          "name": "Runtime evidence / ubuntu-24.04 / 3.14",
+          "conclusion": "success",
+          "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515/job/116085995613"
+        },
+        {
+          "id": 116085995627,
+          "name": "Locked graph + secrets + workflows",
+          "conclusion": "success",
+          "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515/job/116085995627"
+        }
+      ]
+    },
+    {
+      "id": 38632090679,
+      "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090679",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 116085995361,
+          "name": "CodeQL / Python",
+          "conclusion": "success",
+          "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090679/job/116085995361"
+        }
+      ]
+    }
+  ],
+  "portable_validation": {
+    "tests_per_lane": 86,
+    "skips": 0,
+    "statements": 262,
+    "branches": 90,
+    "coverage_percent": 100,
+    "matrix": [
+      "Ubuntu 24.04 / Python 3.12",
+      "Ubuntu 24.04 / Python 3.14",
+      "Windows / Python 3.14",
+      "macOS Intel / Python 3.14"
+    ]
+  },
+  "security": {
+    "open_codeql_alerts": 0,
+    "python_dependency_audit": "no known vulnerabilities",
+    "gitleaks": "no leaks",
+    "actionlint": "passed"
+  },
+  "corrected_runs": [
+    {
+      "id": 38630546596,
+      "reason": "Falco resolved relative plugin path under installation directory."
+    },
+    {
+      "id": 38630998763,
+      "reason": "Falco emitted empty namespace for cluster-scoped audit object; optional metadata adapter rejected it."
+    },
+    {
+      "id": 38631336926,
+      "reason": "Container plugin engine schema required explicit BPM entry."
+    },
+    {
+      "id": 38631584639,
+      "reason": "Legacy text driver-drop summary absent; documented JSON metrics now required."
+    }
+  ],
+  "note": "Immutable accepted implementation evidence; final documentation push reruns the same gates. No old runs deleted."
+}

@@ -1,0 +1,223 @@
+{
+  "author": "Jason Stys",
+  "source": {
+    "accepted_commit": "7e8ea751b900d4b5869cd6082773f78790965788",
+    "run_url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515",
+    "job_url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/38632090515/job/116085994906"
+  },
+  "results": [
+    {
+      "author": "Jason Stys",
+      "mode": "native Falco offline audit replay",
+      "falco": "0.45.0",
+      "k8saudit": "0.18.0",
+      "cases": 27,
+      "expected_alerts": 18,
+      "actual_alerts": 18,
+      "unexpected_rule_events": 0,
+      "missed_expected_rule_events": 0,
+      "exact_match": true,
+      "elapsed_ms": 125.83020699999281,
+      "known_blind_spots": [
+        "Metadata-only pod body",
+        "JSONPatch expansion",
+        "sensitive hostPath subpaths"
+      ],
+      "outcomes": [
+        {
+          "name": "benign-pod",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "privileged",
+          "expected": [
+            "CRSL Privileged Pod"
+          ],
+          "passed": true
+        },
+        {
+          "name": "init-privileged",
+          "expected": [
+            "CRSL Privileged Pod"
+          ],
+          "passed": true
+        },
+        {
+          "name": "ephemeral-privileged",
+          "expected": [
+            "CRSL Privileged Pod"
+          ],
+          "passed": true
+        },
+        {
+          "name": "host-pid",
+          "expected": [
+            "CRSL Host Namespace"
+          ],
+          "passed": true
+        },
+        {
+          "name": "host-ipc",
+          "expected": [
+            "CRSL Host Namespace"
+          ],
+          "passed": true
+        },
+        {
+          "name": "host-network",
+          "expected": [
+            "CRSL Host Namespace"
+          ],
+          "passed": true
+        },
+        {
+          "name": "hostpath",
+          "expected": [
+            "CRSL HostPath Mount"
+          ],
+          "passed": true
+        },
+        {
+          "name": "pod-exec",
+          "expected": [
+            "CRSL Pod Exec"
+          ],
+          "passed": true
+        },
+        {
+          "name": "pod-attach",
+          "expected": [
+            "CRSL Pod Exec"
+          ],
+          "passed": true
+        },
+        {
+          "name": "secret-get",
+          "expected": [
+            "CRSL Secret Read"
+          ],
+          "passed": true
+        },
+        {
+          "name": "secret-list",
+          "expected": [
+            "CRSL Secret Read"
+          ],
+          "passed": true
+        },
+        {
+          "name": "secret-watch",
+          "expected": [
+            "CRSL Secret Read"
+          ],
+          "passed": true
+        },
+        {
+          "name": "wildcard-role",
+          "expected": [
+            "CRSL Wildcard Role"
+          ],
+          "passed": true
+        },
+        {
+          "name": "wildcard-clusterrole",
+          "expected": [
+            "CRSL Wildcard Role"
+          ],
+          "passed": true
+        },
+        {
+          "name": "multiple-findings",
+          "expected": [
+            "CRSL Host Namespace",
+            "CRSL HostPath Mount",
+            "CRSL Privileged Pod"
+          ],
+          "passed": true
+        },
+        {
+          "name": "denied",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "outside-scope",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "request-received",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "metadata-only",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "explicit-false",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "safe-role",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "safe-hostpath",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "hostpath-subpath-blindspot",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "jsonpatch-blindspot",
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "exec-started",
+          "expected": [
+            "CRSL Pod Exec"
+          ],
+          "passed": true
+        },
+        {
+          "name": "secret-denied",
+          "expected": [],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "author": "Jason Stys",
+      "mode": "native modern-eBPF disposable-container probe",
+      "falco": "0.45.0",
+      "alerts": {
+        "CRSL Marker Read": 5,
+        "CRSL Marker Write": 5
+      },
+      "container_scope": true,
+      "benign_control_alerts": 0,
+      "metrics_samples": 17,
+      "sampled_kernel_drops": 0,
+      "sampled_output_drops": 0,
+      "post_fixture_sample": true,
+      "elapsed_ms": 18815.612541999995,
+      "safety": {
+        "network": "none",
+        "read_only": true,
+        "capabilities": "none",
+        "user": "65534",
+        "synthetic_markers_only": true
+      }
+    }
+  ],
+  "note": "Exact expected-rule agreement is relative to documented scope, not full security recall. Periodic drop-counter samples span the fixture, not an authenticated entire-host safety verdict."
+}

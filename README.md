@@ -32,6 +32,8 @@ Native Linux tooling: `python scripts/native_tools.py` installs reviewed officia
 
 ## Documentation
 
+Accepted validation: **86 tests / 100% portable runtime statement-and-branch coverage** on all four OS/Python lanes; **27 native Falco scenarios / 18 exact alerts**; live eBPF captured five reads and five writes with zero sampled kernel/output drops. All seven accepted CI jobs passed. Read [measured evidence](docs/validation.md) and latest [Actions](https://github.com/JasonStys/container-runtime-security-lab/actions).
+
 [Architecture/ADR](docs/architecture.md) · [contracts](docs/contracts.md) · [detector coverage](docs/detections.md) · [security/privacy](docs/security.md) · [operator runbook](docs/runbook.md) · [testing](docs/testing.md) · [performance](docs/performance.md) · [coding](docs/coding.md) · [primary research](docs/research.md) · [review/release](docs/review.md) · [validation](docs/validation.md).
 
 Audit policy is illustrative and never applied to an existing cluster automatically. Real audit bodies can contain sensitive workload commands/environment data. Secret resources are Metadata-only in the example policy. Keep real streams and reports private. Native captures emit only these lab rules; the analyzer discards actor names, command lines, raw output and nonallowlisted fields.
@@ -59,6 +61,10 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [docs/contracts.md](docs/contracts.md) | Input, output and status contracts. |
 | [docs/detections.md](docs/detections.md) | Detector scope, ground truth and blind spots. |
 | [docs/performance.md](docs/performance.md) | Performance and complexity. |
+| [docs/reports/benchmark.json](docs/reports/benchmark.json) | Actual bounded alert processing latency and allocation measurement. |
+| [docs/reports/ci.json](docs/reports/ci.json) | Immutable accepted-source CI snapshot. |
+| [docs/reports/example.html](docs/reports/example.html) | Generated inert synthetic detection evidence report. |
+| [docs/reports/native.json](docs/reports/native.json) | Actual Falco replay and disposable-container probe results. |
 | [docs/research.md](docs/research.md) | Official primary-source research and pinned native choices. |
 | [docs/review.md](docs/review.md) | Code review and release checklist. |
 | [docs/runbook.md](docs/runbook.md) | Runbook, safe operation and rollback. |

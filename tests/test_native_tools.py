@@ -1,24 +1,28 @@
 """Jason Stys: supply-chain checksum/extraction boundaries and native harness guards tested without local Docker/BPF."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# definition: Response — line 34
-# definition: test_download_integrity — line 38
-# parameter: monkeypatch — line 38
-# parameter: args — line 41
-# parameter: kwargs — line 41
-# definition: archive — line 58
-# parameter: kind — line 58
-# variable: output — line 60
-# variable: bundle — line 61
-# variable: info — line 62
-# attribute: type — line 63
-# attribute: size — line 65
-# attribute: linkname — line 68
-# definition: test_extraction — line 73
-# parameter: monkeypatch — line 73
-# parameter: tmp_path — line 73
-# variable: target — line 75
-# definition: test_native_scope_and_mixed_output — line 87
-# parameter: monkeypatch — line 87
+# definition: Response — line 38
+# definition: test_download_integrity — line 42
+# parameter: monkeypatch — line 42
+# parameter: args — line 45
+# parameter: kwargs — line 45
+# definition: archive — line 62
+# parameter: kind — line 62
+# variable: output — line 64
+# variable: bundle — line 65
+# variable: info — line 66
+# attribute: type — line 67
+# attribute: size — line 69
+# attribute: linkname — line 72
+# definition: test_extraction — line 77
+# parameter: monkeypatch — line 77
+# parameter: tmp_path — line 77
+# variable: target — line 79
+# definition: test_native_scope_and_mixed_output — line 91
+# parameter: monkeypatch — line 91
+# definition: test_plugin_absolute_path — line 101
+# variable: filename — line 103
+# variable: mode — line 103
+# variable: args — line 104
 # END CODE MAP
 
 import hashlib
@@ -92,3 +96,15 @@ def test_native_scope_and_mixed_output(monkeypatch: pytest.MonkeyPatch) -> None:
     assert native.json_alerts('status\n{"version":"test"}\n{"rule":"synthetic"}\n') == [
         {"rule": "synthetic"}
     ]
+
+
+def test_plugin_absolute_path() -> None:
+    """Falco must receive absolute plugin paths; validation and capture share the same reviewed command builder."""
+    for mode, filename in (("replay", "libk8saudit.so"), ("live", "libcontainer.so")):
+        args = native.command(mode)
+        assert args[-1] == "plugins[0].library_path=" + str(
+            native.ROOT / ".tools" / filename
+        )
+        assert Path(args[-1].split("=", 1)[1]).is_absolute()
+    with pytest.raises(ValueError):
+        native.command("unknown")

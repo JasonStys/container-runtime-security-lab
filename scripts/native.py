@@ -1,62 +1,65 @@
 """Jason Stys: actual Falco rule validation/replay and safe marker-only live container capture on disposable Linux CI."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# variable: ROOT — line 77
-# variable: FALCO — line 78
-# definition: run — line 81
-# parameter: args — line 81
-# parameter: timeout — line 81
-# variable: result — line 83
-# definition: json_alerts — line 96
-# parameter: text — line 96
-# variable: rows — line 98
-# variable: line — line 99
-# variable: data — line 102
-# definition: replay — line 108
-# variable: corpus — line 110
-# variable: destination — line 111
-# variable: stream — line 113
-# variable: _ — line 114
-# variable: event — line 114
-# variable: args — line 116
-# variable: started — line 126
-# variable: result — line 127
-# variable: alerts — line 128
-# variable: expected — line 129
-# variable: _ — line 130
-# variable: event — line 130
-# variable: rule — line 130
-# variable: rules — line 130
-# variable: actual — line 132
-# variable: row — line 133
-# variable: key — line 139
-# variable: row — line 140
-# variable: _ — line 161
-# variable: name — line 161
-# variable: rules — line 161
-# definition: live — line 166
-# variable: lock — line 173
-# variable: image — line 174
-# variable: name — line 176
-# variable: output — line 177
-# variable: stderr_path — line 179
-# variable: stdout_path — line 179
-# variable: started — line 180
-# variable: stderr — line 193
-# variable: stdout — line 193
-# variable: monitor — line 194
-# variable: returncode — line 248
-# variable: rows — line 265
-# variable: counts — line 266
-# variable: row — line 266
-# variable: key — line 271
-# variable: row — line 272
-# variable: fields — line 273
-# variable: summary — line 280
-# variable: drops — line 281
-# variable: value — line 282
-# definition: main — line 304
-# variable: parser — line 306
-# variable: args — line 308
+# variable: ROOT — line 80
+# variable: FALCO — line 81
+# definition: run — line 84
+# parameter: args — line 84
+# parameter: timeout — line 84
+# variable: result — line 86
+# definition: json_alerts — line 99
+# parameter: text — line 99
+# variable: rows — line 101
+# variable: line — line 102
+# variable: data — line 105
+# definition: command — line 111
+# parameter: mode — line 111
+# variable: libraries — line 113
+# definition: replay — line 125
+# variable: corpus — line 127
+# variable: destination — line 128
+# variable: stream — line 130
+# variable: _ — line 131
+# variable: event — line 131
+# variable: args — line 133
+# variable: started — line 149
+# variable: result — line 150
+# variable: alerts — line 151
+# variable: expected — line 152
+# variable: _ — line 153
+# variable: event — line 153
+# variable: rule — line 153
+# variable: rules — line 153
+# variable: actual — line 155
+# variable: row — line 156
+# variable: key — line 162
+# variable: row — line 163
+# variable: _ — line 184
+# variable: name — line 184
+# variable: rules — line 184
+# definition: live — line 189
+# variable: lock — line 196
+# variable: image — line 197
+# variable: name — line 199
+# variable: output — line 200
+# variable: stderr_path — line 202
+# variable: stdout_path — line 202
+# variable: started — line 203
+# variable: stderr — line 212
+# variable: stdout — line 212
+# variable: monitor — line 213
+# variable: returncode — line 265
+# variable: rows — line 282
+# variable: counts — line 283
+# variable: row — line 283
+# variable: key — line 288
+# variable: row — line 289
+# variable: fields — line 290
+# variable: summary — line 297
+# variable: drops — line 298
+# variable: value — line 299
+# definition: main — line 321
+# variable: parser — line 323
+# variable: args — line 325
 # END CODE MAP
 
 from __future__ import annotations
@@ -105,6 +108,20 @@ def json_alerts(text: str) -> list[dict[str, object]]:
     return rows
 
 
+def command(mode: str) -> list[str]:
+    """Resolve a reviewed plugin to an absolute repo-local path, avoiding Falco's installation-relative lookup."""
+    libraries = {"replay": "libk8saudit.so", "live": "libcontainer.so"}
+    if mode not in libraries:
+        raise ValueError("unknown native mode")
+    return [
+        FALCO,
+        "-c",
+        f"configs/{mode}.yaml",
+        "-o",
+        "plugins[0].library_path=" + str(ROOT / ".tools" / libraries[mode]),
+    ]
+
+
 def replay() -> dict[str, object]:
     """Require exact native (auditID,rule) matches for all hand-labeled positive/negative/blind-spot cases."""
     corpus = cases()
@@ -114,15 +131,21 @@ def replay() -> dict[str, object]:
         for _, event, _ in corpus:
             stream.write(json.dumps(event) + "\n")
     args = [
-        FALCO,
-        "-c",
-        "configs/replay.yaml",
+        *command("replay"),
         "-r",
         "rules/kubernetes.yaml",
         "--disable-source",
         "syscall",
     ]
-    run([*args, "--validate", "rules/kubernetes.yaml"])
+    run(
+        [
+            *command("replay"),
+            "--disable-source",
+            "syscall",
+            "--validate",
+            "rules/kubernetes.yaml",
+        ]
+    )
     started = time.perf_counter()
     result = run(args)
     alerts = json_alerts(result.stdout)
@@ -181,11 +204,7 @@ def live() -> dict[str, object]:
     run(
         [
             "sudo",
-            FALCO,
-            "-c",
-            "configs/live.yaml",
-            "-r",
-            "rules/syscall.yaml",
+            *command("live"),
             "--validate",
             "rules/syscall.yaml",
         ]
@@ -194,9 +213,7 @@ def live() -> dict[str, object]:
         monitor = subprocess.Popen(
             [
                 "sudo",
-                FALCO,
-                "-c",
-                "configs/live.yaml",
+                *command("live"),
                 "-r",
                 "rules/syscall.yaml",
                 "-M",

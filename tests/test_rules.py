@@ -1,27 +1,32 @@
 """Jason Stys: structural rule/output/audit-policy safety contracts, separate from actual native Falco engine validation."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# definition: test_rule_catalog_and_sources — line 35
-# variable: rules — line 37
-# variable: path — line 38
-# variable: item — line 40
-# variable: item — line 42
-# variable: item — line 43
-# definition: test_audit_policy_and_native_config — line 52
-# variable: policy — line 54
-# variable: row — line 59
-# variable: name — line 61
-# variable: config — line 62
-# variable: replay — line 65
-# definition: test_independent_corpus_structure — line 69
-# variable: corpus — line 71
-# variable: _ — line 73
-# variable: item — line 73
-# variable: _ — line 74
-# variable: expected — line 74
-# variable: _ — line 75
-# variable: by_name — line 75
-# variable: expected — line 75
-# variable: name — line 75
+# definition: test_rule_catalog_and_sources — line 40
+# variable: rules — line 42
+# variable: path — line 43
+# variable: item — line 45
+# variable: item — line 47
+# variable: item — line 48
+# definition: test_audit_policy_and_native_config — line 57
+# variable: policy — line 59
+# variable: row — line 64
+# variable: name — line 66
+# variable: config — line 67
+# variable: replay — line 70
+# definition: test_container_engine_schema_scope — line 74
+# variable: config — line 78
+# variable: engines — line 79
+# variable: name — line 92
+# variable: settings — line 92
+# definition: test_independent_corpus_structure — line 97
+# variable: corpus — line 99
+# variable: _ — line 101
+# variable: item — line 101
+# variable: _ — line 102
+# variable: expected — line 102
+# variable: _ — line 103
+# variable: by_name — line 103
+# variable: expected — line 103
+# variable: name — line 103
 # END CODE MAP
 
 from pathlib import Path
@@ -64,6 +69,29 @@ def test_audit_policy_and_native_config() -> None:
         assert config["rule_matching"] == "all"
     replay = yaml.safe_load(Path("configs/replay.yaml").read_text())
     assert "://" not in replay["plugins"][0]["open_params"]
+
+
+def test_container_engine_schema_scope() -> None:
+    """Specify every supported engine explicitly, enabling only the disposable runner's Docker socket."""
+    import json
+
+    config = yaml.safe_load(Path("configs/live.yaml").read_text())
+    engines = json.loads(config["plugins"][0]["init_config"])["engines"]
+    assert set(engines) == {
+        "docker",
+        "podman",
+        "containerd",
+        "cri",
+        "lxc",
+        "libvirt_lxc",
+        "bpm",
+    }
+    assert engines["docker"] == {"enabled": True, "sockets": ["/var/run/docker.sock"]}
+    assert all(
+        not settings["enabled"]
+        for name, settings in engines.items()
+        if name != "docker"
+    )
 
 
 def test_independent_corpus_structure() -> None:

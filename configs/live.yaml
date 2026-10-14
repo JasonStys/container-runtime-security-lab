@@ -35,5 +35,5 @@ webserver:
 plugins:
   - name: container
     library_path: .tools/libcontainer.so
-    init_config: '{"engines":{"docker":{"enabled":true,"sockets":["/var/run/docker.sock"]},"podman":{"enabled":false},"containerd":{"enabled":false},"cri":{"enabled":false},"lxc":{"enabled":false},"libvirt_lxc":{"enabled":false}}}'
+    init_config: '{"engines":{"docker":{"enabled":true,"sockets":["/var/run/docker.sock"]},"podman":{"enabled":false},"containerd":{"enabled":false},"cri":{"enabled":false},"lxc":{"enabled":false},"libvirt_lxc":{"enabled":false},"bpm":{"enabled":false}}}'
 load_plugins: [container]

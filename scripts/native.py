@@ -1,65 +1,73 @@
 """Jason Stys: actual Falco rule validation/replay and safe marker-only live container capture on disposable Linux CI."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# variable: ROOT — line 80
-# variable: FALCO — line 81
-# definition: run — line 84
-# parameter: args — line 84
-# parameter: timeout — line 84
-# variable: result — line 86
-# definition: json_alerts — line 99
-# parameter: text — line 99
-# variable: rows — line 101
-# variable: line — line 102
-# variable: data — line 105
-# definition: command — line 111
-# parameter: mode — line 111
-# variable: libraries — line 113
-# definition: replay — line 125
-# variable: corpus — line 127
-# variable: destination — line 128
-# variable: stream — line 130
-# variable: _ — line 131
-# variable: event — line 131
-# variable: args — line 133
-# variable: started — line 149
-# variable: result — line 150
-# variable: alerts — line 151
-# variable: expected — line 152
-# variable: _ — line 153
-# variable: event — line 153
-# variable: rule — line 153
-# variable: rules — line 153
-# variable: actual — line 155
-# variable: row — line 156
-# variable: key — line 162
+# variable: ROOT — line 87
+# variable: FALCO — line 88
+# definition: run — line 91
+# parameter: args — line 91
+# parameter: timeout — line 91
+# variable: result — line 93
+# definition: json_alerts — line 106
+# parameter: text — line 106
+# variable: rows — line 108
+# variable: line — line 109
+# variable: data — line 112
+# definition: command — line 118
+# parameter: mode — line 118
+# variable: libraries — line 120
+# definition: replay — line 132
+# variable: corpus — line 134
+# variable: destination — line 135
+# variable: stream — line 137
+# variable: _ — line 138
+# variable: event — line 138
+# variable: args — line 140
+# variable: started — line 156
+# variable: result — line 157
+# variable: alerts — line 158
+# variable: expected — line 159
+# variable: _ — line 160
+# variable: event — line 160
+# variable: rule — line 160
+# variable: rules — line 160
+# variable: actual — line 162
 # variable: row — line 163
-# variable: _ — line 184
-# variable: name — line 184
-# variable: rules — line 184
-# definition: live — line 189
-# variable: lock — line 196
-# variable: image — line 197
-# variable: name — line 199
-# variable: output — line 200
-# variable: stderr_path — line 202
-# variable: stdout_path — line 202
-# variable: started — line 203
-# variable: stderr — line 212
-# variable: stdout — line 212
-# variable: monitor — line 213
-# variable: returncode — line 265
-# variable: rows — line 282
-# variable: counts — line 283
-# variable: row — line 283
-# variable: key — line 288
-# variable: row — line 289
-# variable: fields — line 290
-# variable: summary — line 297
-# variable: drops — line 298
-# variable: value — line 299
-# definition: main — line 321
-# variable: parser — line 323
-# variable: args — line 325
+# variable: key — line 169
+# variable: row — line 170
+# variable: _ — line 191
+# variable: name — line 191
+# variable: rules — line 191
+# definition: check_metrics — line 196
+# parameter: content — line 196
+# parameter: fixture_finished — line 196
+# variable: rows — line 198
+# variable: line — line 200
+# variable: row — line 205
+# variable: field — line 206
+# variable: row — line 217
+# variable: row — line 218
+# definition: live — line 229
+# variable: lock — line 236
+# variable: image — line 237
+# variable: name — line 239
+# variable: output — line 240
+# variable: stderr_path — line 242
+# variable: stdout_path — line 242
+# variable: started — line 243
+# variable: stderr — line 252
+# variable: stdout — line 252
+# variable: monitor — line 253
+# variable: fixture_finished — line 305
+# variable: returncode — line 306
+# variable: rows — line 323
+# variable: counts — line 324
+# variable: row — line 324
+# variable: key — line 329
+# variable: row — line 330
+# variable: fields — line 331
+# variable: metrics — line 338
+# definition: main — line 360
+# variable: parser — line 362
+# variable: args — line 364
 # END CODE MAP
 
 from __future__ import annotations
@@ -67,7 +75,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import re
 import signal
 import subprocess
 import time
@@ -186,6 +193,39 @@ def replay() -> dict[str, object]:
     )
 
 
+def check_metrics(content: str, fixture_finished: int) -> dict[str, object]:
+    """Require native kernel/output drop counters and a post-fixture sample; missing metrics are never zero."""
+    rows = [
+        json.loads(line)["output_fields"]
+        for line in content.splitlines()
+        if line.strip()
+    ]
+    if not rows:
+        raise ValueError("native metric samples missing")
+    for row in rows:
+        for field in (
+            "scap.n_drops",
+            "scap.n_evts",
+            "falco.outputs_queue_num_drops",
+            "evt.time",
+        ):
+            if type(row.get(field)) is not int or row[field] < 0:
+                raise ValueError("required native counter missing or malformed")
+        if row["scap.n_drops"] != 0 or row["falco.outputs_queue_num_drops"] != 0:
+            raise ValueError("native capture/output drops observed")
+    if (
+        max(row["evt.time"] for row in rows) < fixture_finished
+        or max(row["scap.n_evts"] for row in rows) <= 0
+    ):
+        raise ValueError("metric coverage does not span completed fixture")
+    return {
+        "metrics_samples": len(rows),
+        "sampled_kernel_drops": 0,
+        "sampled_output_drops": 0,
+        "post_fixture_sample": True,
+    }
+
+
 def live() -> dict[str, object]:
     """Observe fake file markers in a no-network/no-capability container; host/BPF authority confined to Linux CI."""
     if (
@@ -262,6 +302,7 @@ def live() -> dict[str, object]:
                     "/lab/crsl-probe.sh",
                 ]
             )
+            fixture_finished = time.time_ns()
             returncode = monitor.wait(timeout=30)
         finally:
             if monitor.poll() is None:
@@ -294,10 +335,8 @@ def live() -> dict[str, object]:
             "/tmp/crsl-config-marker",
         }
         parse_alert(row, key)
-    summary = stdout_path.read_text() + "\n" + stderr_path.read_text()
-    drops = re.findall(r"Driver Drops:\s*(\d+)", summary)
-    assert drops and all(int(value) == 0 for value in drops), (
-        "missing/positive drop evidence"
+    metrics = check_metrics(
+        (output / "live-metrics.jsonl").read_text(), fixture_finished
     )
     return dict(
         author="Jason Stys",
@@ -306,7 +345,7 @@ def live() -> dict[str, object]:
         alerts=dict(counts),
         container_scope=True,
         benign_control_alerts=0,
-        dropped_events=0,
+        **metrics,
         elapsed_ms=(time.perf_counter() - started) * 1000,
         safety=dict(
             network="none",

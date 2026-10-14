@@ -1,28 +1,33 @@
 """Jason Stys: supply-chain checksum/extraction boundaries and native harness guards tested without local Docker/BPF."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# definition: Response — line 38
-# definition: test_download_integrity — line 42
-# parameter: monkeypatch — line 42
-# parameter: args — line 45
-# parameter: kwargs — line 45
-# definition: archive — line 62
-# parameter: kind — line 62
-# variable: output — line 64
-# variable: bundle — line 65
-# variable: info — line 66
-# attribute: type — line 67
-# attribute: size — line 69
-# attribute: linkname — line 72
-# definition: test_extraction — line 77
-# parameter: monkeypatch — line 77
-# parameter: tmp_path — line 77
-# variable: target — line 79
-# definition: test_native_scope_and_mixed_output — line 91
-# parameter: monkeypatch — line 91
-# definition: test_plugin_absolute_path — line 101
-# variable: filename — line 103
-# variable: mode — line 103
-# variable: args — line 104
+# definition: Response — line 43
+# definition: test_download_integrity — line 47
+# parameter: monkeypatch — line 47
+# parameter: args — line 50
+# parameter: kwargs — line 50
+# definition: archive — line 67
+# parameter: kind — line 67
+# variable: output — line 69
+# variable: bundle — line 70
+# variable: info — line 71
+# attribute: type — line 72
+# attribute: size — line 74
+# attribute: linkname — line 77
+# definition: test_extraction — line 82
+# parameter: monkeypatch — line 82
+# parameter: tmp_path — line 82
+# variable: target — line 84
+# definition: test_native_scope_and_mixed_output — line 96
+# parameter: monkeypatch — line 96
+# definition: test_plugin_absolute_path — line 106
+# variable: filename — line 108
+# variable: mode — line 108
+# variable: args — line 109
+# definition: test_required_native_metrics — line 118
+# variable: fields — line 122
+# variable: content — line 128
+# variable: field — line 134
+# variable: value — line 134
 # END CODE MAP
 
 import hashlib
@@ -108,3 +113,32 @@ def test_plugin_absolute_path() -> None:
         assert Path(args[-1].split("=", 1)[1]).is_absolute()
     with pytest.raises(ValueError):
         native.command("unknown")
+
+
+def test_required_native_metrics() -> None:
+    """Zero-drop evidence must be present, numeric and cover the completed fixture, not inferred from missing text."""
+    import json
+
+    fields = {
+        "scap.n_drops": 0,
+        "scap.n_evts": 12,
+        "falco.outputs_queue_num_drops": 0,
+        "evt.time": 100,
+    }
+    content = json.dumps({"output_fields": fields})
+    assert native.check_metrics(content, 99)["post_fixture_sample"]
+    with pytest.raises(ValueError):
+        native.check_metrics("", 99)
+    with pytest.raises(ValueError):
+        native.check_metrics(content, 101)
+    for field, value in (
+        ("scap.n_drops", 1),
+        ("falco.outputs_queue_num_drops", 1),
+        ("scap.n_evts", 0),
+        ("scap.n_drops", None),
+        ("evt.time", True),
+    ):
+        with pytest.raises(ValueError):
+            native.check_metrics(
+                json.dumps({"output_fields": {**fields, field: value}}), 99
+            )

@@ -1,29 +1,51 @@
 # Jason Stys: syscall-only modern eBPF on disposable CI runner; no listeners, no external outputs.
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# parameter: json_output — line 22
-# parameter: rule_matching — line 23
-# parameter: json_include_output_property — line 24
-# parameter: time_format_iso_8601 — line 25
-# parameter: buffered_outputs — line 26
-# parameter: log_stderr — line 27
-# parameter: log_syslog — line 28
-# parameter: engine — line 29
-# parameter: kind — line 30
-# parameter: stdout_output — line 31
-# parameter: enabled — line 32
-# parameter: webserver — line 33
-# parameter: enabled — line 34
-# parameter: plugins — line 35
-# parameter: name — line 36
-# parameter: library_path — line 37
-# parameter: init_config — line 38
-# parameter: load_plugins — line 39
+# parameter: json_output — line 33
+# parameter: rule_matching — line 34
+# parameter: json_include_output_property — line 35
+# parameter: time_format_iso_8601 — line 36
+# parameter: buffered_outputs — line 37
+# parameter: metrics — line 38
+# parameter: enabled — line 39
+# parameter: interval — line 40
+# parameter: output_rule — line 41
+# parameter: output_file — line 42
+# parameter: kernel_event_counters_enabled — line 43
+# parameter: resource_utilization_enabled — line 44
+# parameter: state_counters_enabled — line 45
+# parameter: libbpf_stats_enabled — line 46
+# parameter: plugins_metrics_enabled — line 47
+# parameter: include_empty_values — line 48
+# parameter: log_stderr — line 49
+# parameter: log_syslog — line 50
+# parameter: engine — line 51
+# parameter: kind — line 52
+# parameter: stdout_output — line 53
+# parameter: enabled — line 54
+# parameter: webserver — line 55
+# parameter: enabled — line 56
+# parameter: plugins — line 57
+# parameter: name — line 58
+# parameter: library_path — line 59
+# parameter: init_config — line 60
+# parameter: load_plugins — line 61
 # END CODE MAP
 json_output: true
 rule_matching: all
 json_include_output_property: false
 time_format_iso_8601: true
 buffered_outputs: false
+metrics:
+  enabled: true
+  interval: 1s
+  output_rule: false
+  output_file: out/live-metrics.jsonl
+  kernel_event_counters_enabled: true
+  resource_utilization_enabled: false
+  state_counters_enabled: false
+  libbpf_stats_enabled: false
+  plugins_metrics_enabled: false
+  include_empty_values: true
 log_stderr: true
 log_syslog: false
 engine:

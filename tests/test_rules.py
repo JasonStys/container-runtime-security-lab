@@ -1,32 +1,35 @@
 """Jason Stys: structural rule/output/audit-policy safety contracts, separate from actual native Falco engine validation."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# definition: test_rule_catalog_and_sources — line 40
-# variable: rules — line 42
-# variable: path — line 43
-# variable: item — line 45
-# variable: item — line 47
+# definition: test_rule_catalog_and_sources — line 43
+# variable: rules — line 45
+# variable: path — line 46
 # variable: item — line 48
-# definition: test_audit_policy_and_native_config — line 57
-# variable: policy — line 59
-# variable: row — line 64
-# variable: name — line 66
-# variable: config — line 67
-# variable: replay — line 70
-# definition: test_container_engine_schema_scope — line 74
-# variable: config — line 78
-# variable: engines — line 79
-# variable: name — line 92
-# variable: settings — line 92
-# definition: test_independent_corpus_structure — line 97
-# variable: corpus — line 99
-# variable: _ — line 101
-# variable: item — line 101
-# variable: _ — line 102
-# variable: expected — line 102
-# variable: _ — line 103
-# variable: by_name — line 103
-# variable: expected — line 103
-# variable: name — line 103
+# variable: item — line 50
+# variable: item — line 51
+# definition: test_audit_policy_and_native_config — line 60
+# variable: policy — line 62
+# variable: row — line 67
+# definition: test_metric_output_private_and_enabled — line 71
+# variable: config — line 73
+# variable: metrics — line 74
+# variable: name — line 78
+# variable: config — line 79
+# variable: replay — line 82
+# definition: test_container_engine_schema_scope — line 86
+# variable: config — line 90
+# variable: engines — line 91
+# variable: name — line 104
+# variable: settings — line 104
+# definition: test_independent_corpus_structure — line 109
+# variable: corpus — line 111
+# variable: _ — line 113
+# variable: item — line 113
+# variable: _ — line 114
+# variable: expected — line 114
+# variable: _ — line 115
+# variable: by_name — line 115
+# variable: expected — line 115
+# variable: name — line 115
 # END CODE MAP
 
 from pathlib import Path
@@ -63,6 +66,15 @@ def test_audit_policy_and_native_config() -> None:
         "secrets" not in row.get("resources", [{}])[0].get("resources", [])
         for row in policy["rules"][1:]
     )
+
+
+def test_metric_output_private_and_enabled() -> None:
+    """Required drop metrics stay repo-local and do not become alert streams or change kernel BPF-stat settings."""
+    config = yaml.safe_load(Path("configs/live.yaml").read_text())
+    metrics = config["metrics"]
+    assert metrics["enabled"] and metrics["kernel_event_counters_enabled"]
+    assert not metrics["output_rule"] and not metrics["libbpf_stats_enabled"]
+    assert metrics["output_file"] == "out/live-metrics.jsonl"
     for name in ("replay", "live"):
         config = yaml.safe_load(Path(f"configs/{name}.yaml").read_text())
         assert not config["webserver"]["enabled"] and not config["log_syslog"]

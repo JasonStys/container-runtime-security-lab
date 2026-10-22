@@ -65,6 +65,7 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [docs/reports/ci.json](docs/reports/ci.json) | Immutable accepted-source CI snapshot. |
 | [docs/reports/example.html](docs/reports/example.html) | Generated inert synthetic detection evidence report. |
 | [docs/reports/native.json](docs/reports/native.json) | Actual Falco replay and disposable-container probe results. |
+| [docs/reports/portfolio-sync-2026-10-22.md](docs/reports/portfolio-sync-2026-10-22.md) | <!-- File: docs/reports/portfolio-sync-2026-10-22.md; Purpose: certificate-bundle security repair and evidence by Jason Stys. -->. |
 | [docs/research.md](docs/research.md) | Official primary-source research and pinned native choices. |
 | [docs/review.md](docs/review.md) | Code review and release checklist. |
 | [docs/runbook.md](docs/runbook.md) | Runbook, safe operation and rollback. |

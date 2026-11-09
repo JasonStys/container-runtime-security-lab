@@ -24,6 +24,20 @@ python -m runtime_lab.cli --alerts examples/alerts.jsonl --health examples/healt
 
 The synthetic sample deliberately returns **1** (three alerts need review), not a software failure. Open `out/review-01/review.html` locally. Status 0=declared complete coverage/no alerts; 1=alerts or gaps; 2=input/operational error. **Status 0 is not proof of safety.**
 
+## Review related alert episodes and analyst dispositions
+
+After creating a normal private review, reuse its saved **pseudonymized** `review.json`:
+
+```text
+python -m runtime_lab.episodes --review out/review-01/review.json --gap-seconds 30 --output out/episode-review
+```
+
+Open `episodes.html` for a readable rule/time/count/continuity/disposition table and exact evidence details. Continuous-source observations with the same rule, scope and object may group within an inclusive1–300second gap. Any source-level drop/incomplete/health gap prevents grouping that source: individual observations remain separate because the exact missing interval is unknown. Every original alert, priority, duplicate count and source gap remains in the output.
+
+Fill a private copy of `triage-template.json` with `investigate`, `expected_activity`, `false_positive` or `needs_context` and a meaningful reason, then rerun with `--triage <private-file>` into a new directory. Missing entries stay unreviewed. Wrong saved-review hashes, unknown/duplicate episode IDs, changed grouping IDs and blank reasons reject. A disposition is a local analyst assertion; it cannot suppress original detections or manufacture a clean result. The command returns1 while original alerts/gaps exist, even if every episode is reviewed.
+
+Use the same saved review for triage. Re-running raw ingestion deliberately creates new privacy pseudonyms; this workflow neither persists a privacy key nor links objects across independent reviews. Reports remain private plaintext, not authenticated sensor evidence or incident/compromise attribution.
+
 ## Development
 
 Install hash-locked dev dependencies in a virtual environment: `python -m pip install --require-hashes -r requirements-dev.lock`. Run `python -m pytest --cov=runtime_lab`, `python -m ruff check .`, `python -m mypy`, and `python scripts/benchmark.py` with repo root on PYTHONPATH. Raw data and native outputs belong only in ignored private folders.
@@ -63,6 +77,7 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [docs/performance.md](docs/performance.md) | Performance and complexity. |
 | [docs/reports/benchmark.json](docs/reports/benchmark.json) | Actual bounded alert processing latency and allocation measurement. |
 | [docs/reports/ci.json](docs/reports/ci.json) | Immutable accepted-source CI snapshot. |
+| [docs/reports/episodes-2026-11-09.md](docs/reports/episodes-2026-11-09.md) | Coverage-aware episode review validation — November 9, 2026. |
 | [docs/reports/example.html](docs/reports/example.html) | Generated inert synthetic detection evidence report. |
 | [docs/reports/native.json](docs/reports/native.json) | Actual Falco replay and disposable-container probe results. |
 | [docs/reports/portfolio-sync-2026-10-22.md](docs/reports/portfolio-sync-2026-10-22.md) | <!-- File: docs/reports/portfolio-sync-2026-10-22.md; Purpose: certificate-bundle security repair and evidence by Jason Stys. -->. |
@@ -85,6 +100,7 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [runtime\_lab/\_\_init\_\_.py](runtime_lab/__init__.py) | Jason Stys: offline, privacy-minimized Falco evidence review; never an enforcement or live monitoring daemon. |
 | [runtime\_lab/cli.py](runtime_lab/cli.py) | Jason Stys: explicit offline alert/health review CLI, random per-review privacy keys and content-free diagnostics. |
 | [runtime\_lab/contracts.py](runtime_lab/contracts.py) | Jason Stys: bounded JSONL, exact policy/health types, UTC clocks and pseudonymized Falco alert contracts. |
+| [runtime\_lab/episodes.py](runtime_lab/episodes.py) | Jason Stys: coverage-aware saved-review episodes and reasoned analyst dispositions without altering detections. |
 | [runtime\_lab/evidence.py](runtime_lab/evidence.py) | Jason Stys: fresh privacy-minimized JSON/HTML/SQLite evidence and integrity manifests. |
 | [runtime\_lab/review.py](runtime_lab/review.py) | Jason Stys: deterministic alert deduplication, explicit coverage gaps and stable source/rule triage. |
 | [scripts/benchmark.py](scripts/benchmark.py) | Jason Stys: deterministic bounded HMAC/alert-review benchmark, descriptive rather than hardware-dependent CI gate. |
@@ -98,6 +114,7 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [sql/evidence.sql](sql/evidence.sql) | Jason Stys: pseudonymized detection evidence with parameterized inserts; no raw audit objects/actors. |
 | [tests/\_\_init\_\_.py](tests/__init__.py) | Jason Stys: shared synthetic-only test helpers; no host monitoring or external services on import. |
 | [tests/test\_contracts.py](tests/test_contracts.py) | Jason Stys: strict parser boundaries, pseudonym privacy and hostile bounded JSONL/property cases. |
+| [tests/test\_episodes.py](tests/test_episodes.py) | Jason Stys: independent episode continuity, private review binding and reasoned-triage regressions. |
 | [tests/test\_evidence.py](tests/test_evidence.py) | Jason Stys: actual CLI/bundle round trips, escaping, SQL injection safety, output preservation and safe diagnostics. |
 | [tests/test\_native\_tools.py](tests/test_native_tools.py) | Jason Stys: supply-chain checksum/extraction boundaries and native harness guards tested without local Docker/BPF. |
 | [tests/test\_review.py](tests/test_review.py) | Jason Stys: deduplication/coverage/clock contracts, input-order properties and no-alerts-not-safe regressions. |

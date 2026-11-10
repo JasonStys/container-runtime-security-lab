@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "project": "container-runtime-security-lab",
+  "author": "Jason Stys",
+  "editionDate": "2026-11-09",
+  "sourceBaseline": "437ef271990ab763f3d988d7618a0c67346e72c0",
+  "sourceUrl": "https://github.com/JasonStys/container-runtime-security-lab/tree/437ef271990ab763f3d988d7618a0c67346e72c0",
+  "functionalEvidenceBaseline": "437ef271990ab763f3d988d7618a0c67346e72c0",
+  "evidenceObservedAt": "2026-11-10T05:25:40.628667+00:00",
+  "workflowEvidence": [
+    {
+      "conclusion": "success",
+      "databaseId": 42715629709,
+      "event": "push",
+      "headSha": "437ef271990ab763f3d988d7618a0c67346e72c0",
+      "name": "Validate",
+      "status": "completed",
+      "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/42715629709"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 42715630195,
+      "event": "push",
+      "headSha": "437ef271990ab763f3d988d7618a0c67346e72c0",
+      "name": "CodeQL",
+      "status": "completed",
+      "url": "https://github.com/JasonStys/container-runtime-security-lab/actions/runs/42715630195"
+    }
+  ],
+  "summary": "Group coverage-aware runtime alert episodes and retain exact reasoned human dispositions without changing original alert priorities.",
+  "rationale": "Makes alert triage practical while preserving evidence gaps and detection provenance.",
+  "limitations": [
+    "Source-health declarations and analyst dispositions are assertions, not attested incidents or proof of safety.",
+    "Capture gaps lack exact timestamps, so source alerts are conservatively kept separate rather than merged across uncertain gaps.",
+    "Pseudonyms and episode IDs apply to one exact saved review; no persistent key management or cross-review identity linkage is supplied."
+  ],
+  "documents": [
+    {
+      "filename": "project-guide.docx",
+      "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "bytes": 44701,
+      "sha256": "69be602fb716d7ee7689a7356d95ce68ddaf180e5b974c6f2c70c575cdac35c5",
+      "sourceBaseline": "437ef271990ab763f3d988d7618a0c67346e72c0",
+      "visualReview": {
+        "approved": true,
+        "method": "Every rendered page individually viewed at readable original resolution",
+        "pageCount": 5,
+        "renderedPageSha256": {
+          "page-1.png": "4b6ca3cdac2be987a8d1a36ae3462c24e1fc923d271094961e537f7d5603dfa2",
+          "page-2.png": "798f44576ec6de2284c7c6776d228dff5cbe73ce70fef9fdd012f1e36e4eaa19",
+          "page-3.png": "1edffc83c45319d9f2843ca020507be16d487792a12d54aefd6bbebeb6b15ec1",
+          "page-4.png": "0c316f462c65ab79baa97e3cf75dc3db47415ac445248bb906938ed960ad7c05",
+          "page-5.png": "8fde9136189f2d317ec689ce29d7f7c8f2d3d71a1841601fa574cae0f344ede4"
+        }
+      }
+    }
+  ],
+  "scope": "Reviewed documentation editions of the cited source. Checksums identify bytes, not authorship. Historical measurements retain their own dates; integration CI must be checked separately."
+}

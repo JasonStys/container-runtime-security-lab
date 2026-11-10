@@ -74,13 +74,17 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [docs/coding.md](docs/coding.md) | Coding and documentation conventions. |
 | [docs/contracts.md](docs/contracts.md) | Input, output and status contracts. |
 | [docs/detections.md](docs/detections.md) | Detector scope, ground truth and blind spots. |
+| [docs/handbook.md](docs/handbook.md) | Container Runtime Security Lab handbook. |
 | [docs/performance.md](docs/performance.md) | Performance and complexity. |
 | [docs/reports/benchmark.json](docs/reports/benchmark.json) | Actual bounded alert processing latency and allocation measurement. |
 | [docs/reports/ci.json](docs/reports/ci.json) | Immutable accepted-source CI snapshot. |
+| [docs/reports/documentation-refresh-2026-11-09.md](docs/reports/documentation-refresh-2026-11-09.md) | Documentation refresh — 2026-11-09. |
 | [docs/reports/episodes-2026-11-09.md](docs/reports/episodes-2026-11-09.md) | Coverage-aware episode review validation — November 9, 2026. |
 | [docs/reports/example.html](docs/reports/example.html) | Generated inert synthetic detection evidence report. |
 | [docs/reports/native.json](docs/reports/native.json) | Actual Falco replay and disposable-container probe results. |
 | [docs/reports/portfolio-sync-2026-10-22.md](docs/reports/portfolio-sync-2026-10-22.md) | <!-- File: docs/reports/portfolio-sync-2026-10-22.md; Purpose: certificate-bundle security repair and evidence by Jason Stys. -->. |
+| [docs/reports/project-guide.docx](docs/reports/project-guide.docx) | Reviewed Word project guide bound to the documented source revision. |
+| [docs/reports/publications.json](docs/reports/publications.json) | Exact Office digests, visual review scopes and immutable source baselines. |
 | [docs/research.md](docs/research.md) | Official primary-source research and pinned native choices. |
 | [docs/review.md](docs/review.md) | Code review and release checklist. |
 | [docs/runbook.md](docs/runbook.md) | Runbook, safe operation and rollback. |
@@ -117,8 +121,15 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [tests/test\_episodes.py](tests/test_episodes.py) | Jason Stys: independent episode continuity, private review binding and reasoned-triage regressions. |
 | [tests/test\_evidence.py](tests/test_evidence.py) | Jason Stys: actual CLI/bundle round trips, escaping, SQL injection safety, output preservation and safe diagnostics. |
 | [tests/test\_native\_tools.py](tests/test_native_tools.py) | Jason Stys: supply-chain checksum/extraction boundaries and native harness guards tested without local Docker/BPF. |
+| [tests/test\_publication\_policy.py](tests/test_publication_policy.py) | Jason Stys: independent real-ZIP publication privacy boundary and unknown-file rejection regressions. |
 | [tests/test\_review.py](tests/test_review.py) | Jason Stys: deduplication/coverage/clock contracts, input-order properties and no-alerts-not-safe regressions. |
 | [tests/test\_rules.py](tests/test_rules.py) | Jason Stys: structural rule/output/audit-policy safety contracts, separate from actual native Falco engine validation. |
 | [tools.lock.json](tools.lock.json) | Reviewed official Falco/plugin/container/scanner digests. |
 
 <!-- END FILE GUIDE -->
+
+## Documentation editions
+
+Start with the [organized handbook](docs/handbook.md) for current usage, design, security and test guidance. Reviewed downloadable editions: [project-guide.docx](docs/reports/project-guide.docx).
+
+[Publication identities and source scope](docs/reports/publications.json) · [Documentation validation record](docs/reports/documentation-refresh-2026-11-09.md). Historical results retain their own tested revision and date.

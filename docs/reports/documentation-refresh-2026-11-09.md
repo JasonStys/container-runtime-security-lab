@@ -46,3 +46,9 @@ The independent publication audit also matched every copied Office file to its a
 
 
 The existing full Python suite passed 99 tests at 99.61% combined coverage, retaining the 95% floor. These local checks did not execute Falco or a live container syscall probe; those genuine separate hosted lanes remain required.
+
+## Hosted checker correction
+
+The first documentation PR run exposed a real repository integration gap after its functional tests passed: the tracked-source privacy checker decoded the new reviewed Word ZIP as UTF-8 text. This was a source-checker defect, not a GitHub runner failure. [Original failing run](https://github.com/JasonStys/container-runtime-security-lab/actions/runs/42779210364) preserves that observation. The checker now reads XML and relationship text only for the exact `docs/reports/project-guide.docx` path. The original credential scan still inspects that text. Unknown binary paths retain strict rejection. The reader rejects duplicate/excess members, excessive expanded/XML bytes, missing Word parts, VBA and embedded objects, and checks ZIP integrity. No privacy, passive-runtime, provider-free, native or workflow gate was removed.
+
+Ten independent tests use actual ZIP bytes to check accepted XML/relationships, real main-guard rejection of credentials in both document and relationship parts, unknown-filename rejection, and malformed/macro/embedded/oversize/duplicate packages. The complete local Python suite now passes 109 tests at the unchanged runtime coverage floor. Existing Ruff, formatting, mypy, exact code maps, tracked-file guide and the previously omitted original `python scripts/validate_repo.py` gate all pass. Later hosted results remain separate required evidence.

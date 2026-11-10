@@ -121,6 +121,7 @@ Audit policy is illustrative and never applied to an existing cluster automatica
 | [tests/test\_episodes.py](tests/test_episodes.py) | Jason Stys: independent episode continuity, private review binding and reasoned-triage regressions. |
 | [tests/test\_evidence.py](tests/test_evidence.py) | Jason Stys: actual CLI/bundle round trips, escaping, SQL injection safety, output preservation and safe diagnostics. |
 | [tests/test\_native\_tools.py](tests/test_native_tools.py) | Jason Stys: supply-chain checksum/extraction boundaries and native harness guards tested without local Docker/BPF. |
+| [tests/test\_publication\_policy.py](tests/test_publication_policy.py) | Jason Stys: independent real-ZIP publication privacy boundary and unknown-file rejection regressions. |
 | [tests/test\_review.py](tests/test_review.py) | Jason Stys: deduplication/coverage/clock contracts, input-order properties and no-alerts-not-safe regressions. |
 | [tests/test\_rules.py](tests/test_rules.py) | Jason Stys: structural rule/output/audit-policy safety contracts, separate from actual native Falco engine validation. |
 | [tools.lock.json](tools.lock.json) | Reviewed official Falco/plugin/container/scanner digests. |

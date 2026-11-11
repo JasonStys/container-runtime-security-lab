@@ -1,32 +1,35 @@
 """Jason Stys: tracked-file privacy, passive-runtime imports and zero-artifact/cache workflow guards."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# variable: ROOT — line 39
-# definition: public_text — line 42
-# parameter: path — line 42
-# variable: package — line 46
-# variable: members — line 47
-# variable: member — line 48
-# variable: names — line 48
-# variable: member — line 52
-# variable: item — line 57
-# variable: inspected — line 61
-# variable: member — line 62
-# variable: member — line 64
+# variable: ROOT — line 42
+# definition: public_text — line 45
+# parameter: path — line 45
+# variable: package — line 52
+# variable: members — line 53
+# variable: member — line 54
+# variable: names — line 54
+# variable: member — line 58
+# variable: item — line 63
+# variable: inspected — line 67
 # variable: member — line 68
-# definition: main — line 71
-# variable: names — line 73
-# variable: name — line 79
-# variable: part — line 82
-# variable: path — line 89
-# variable: text — line 92
-# variable: imports — line 101
-# variable: node — line 102
-# variable: alias — line 104
-# variable: path — line 120
-# variable: text — line 121
-# variable: action — line 128
-# variable: codeql — line 131
-# variable: flag — line 132
+# variable: member — line 70
+# variable: result — line 74
+# variable: member — line 75
+# variable: stream — line 76
+# variable: payload — line 77
+# definition: main — line 84
+# variable: names — line 86
+# variable: name — line 92
+# variable: part — line 95
+# variable: path — line 102
+# variable: text — line 105
+# variable: imports — line 114
+# variable: node — line 115
+# variable: alias — line 117
+# variable: path — line 133
+# variable: text — line 134
+# variable: action — line 141
+# variable: codeql — line 144
+# variable: flag — line 145
 # END CODE MAP
 
 import ast
@@ -41,7 +44,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def public_text(path: Path) -> str:
     """Inspect all XML/relationships in the one authored Word path; unknown binary files still fail closed."""
-    if path.relative_to(ROOT).as_posix() != "docs/reports/project-guide.docx":
+    if path.relative_to(ROOT).as_posix() not in {
+        "docs/reports/project-guide.docx",
+        "docs/reports/windows-application-guide-1.1.0.docx",
+    }:
         return path.read_text(encoding="utf-8")
     with ZipFile(path) as package:
         members = package.infolist()
@@ -65,7 +71,14 @@ def public_text(path: Path) -> str:
             raise ValueError("Reviewed Word XML exceeds inspection budget")
         if package.testzip() is not None:
             raise ValueError("Reviewed Word package integrity failed")
-        return "\n".join(package.read(member).decode("utf-8") for member in inspected)
+        result = []
+        for member in inspected:
+            with package.open(member) as stream:
+                payload = stream.read(2 * 1024 * 1024 + 1)
+            if len(payload) > 2 * 1024 * 1024 or len(payload) != member.file_size:
+                raise ValueError("Reviewed Word XML exceeds its actual byte budget")
+            result.append(payload.decode("utf-8", errors="strict"))
+        return "\n".join(result)
 
 
 def main() -> None:

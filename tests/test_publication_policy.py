@@ -1,41 +1,47 @@
 """Jason Stys: independent real-ZIP publication privacy boundary and unknown-file rejection regressions."""
 # BEGIN CODE MAP (generated; python scripts/code_map.py)
-# definition: write_document — line 49
-# parameter: content — line 50
-# parameter: extra — line 50
-# parameter: root — line 50
-# variable: path — line 53
-# variable: package — line 55
-# variable: name — line 59
-# variable: value — line 59
-# definition: test_actual_word_xml_and_relationships_remain_inspected — line 64
-# parameter: monkeypatch — line 64
-# parameter: tmp_path — line 64
-# variable: path — line 67
-# variable: result — line 70
-# definition: test_actual_main_still_rejects_credentials_in_word_parts — line 76
-# parameter: monkeypatch — line 77
-# parameter: part — line 77
-# parameter: tmp_path — line 77
-# variable: token — line 80
-# parameter: args — line 93
-# parameter: kwargs — line 93
-# definition: test_only_exact_reviewed_filename_receives_office_handling — line 99
-# parameter: monkeypatch — line 99
-# parameter: tmp_path — line 99
-# variable: path — line 102
-# variable: unknown — line 103
-# variable: source — line 107
-# definition: test_unsupported_or_unbounded_real_packages_fail — line 116
-# parameter: defect — line 116
-# parameter: monkeypatch — line 116
-# parameter: tmp_path — line 116
-# variable: extras — line 119
-# variable: extras — line 127
-# variable: i — line 127
-# variable: path — line 128
-# variable: package — line 130
-# variable: package — line 135
+# definition: write_document — line 55
+# parameter: content — line 56
+# parameter: extra — line 56
+# parameter: root — line 56
+# variable: path — line 59
+# variable: package — line 61
+# variable: name — line 65
+# variable: value — line 65
+# definition: test_actual_word_xml_and_relationships_remain_inspected — line 70
+# parameter: monkeypatch — line 70
+# parameter: tmp_path — line 70
+# variable: path — line 73
+# variable: result — line 76
+# definition: test_actual_main_still_rejects_credentials_in_word_parts — line 82
+# parameter: monkeypatch — line 83
+# parameter: part — line 83
+# parameter: tmp_path — line 83
+# variable: token — line 86
+# parameter: args — line 99
+# parameter: kwargs — line 99
+# definition: test_only_exact_reviewed_filename_receives_office_handling — line 105
+# parameter: monkeypatch — line 105
+# parameter: tmp_path — line 105
+# variable: path — line 108
+# variable: unknown — line 109
+# variable: source — line 113
+# definition: test_unsupported_or_unbounded_real_packages_fail — line 122
+# parameter: defect — line 122
+# parameter: monkeypatch — line 122
+# parameter: tmp_path — line 122
+# variable: extras — line 125
+# variable: extras — line 133
+# variable: i — line 133
+# variable: path — line 134
+# variable: package — line 136
+# variable: package — line 141
+# definition: test_current_installed_edition_is_inspected — line 148
+# parameter: monkeypatch — line 148
+# parameter: tmp_path — line 148
+# variable: historical — line 151
+# variable: current — line 152
+# variable: unknown — line 155
 # END CODE MAP
 
 from pathlib import Path
@@ -137,3 +143,16 @@ def test_unsupported_or_unbounded_real_packages_fail(tmp_path, monkeypatch, defe
             package.writestr("word/document.xml", "<document/>")
     with pytest.raises(ValueError):
         policy.public_text(path)
+
+
+def test_current_installed_edition_is_inspected(tmp_path, monkeypatch):
+    """The exact current Word edition exposes XML; an arbitrary renamed binary still fails."""
+    monkeypatch.setattr(policy, "ROOT", tmp_path)
+    historical = write_document(tmp_path, "<document>current-review-marker</document>")
+    current = historical.with_name("windows-application-guide-1.1.0.docx")
+    current.write_bytes(historical.read_bytes())
+    assert "current-review-marker" in policy.public_text(current)
+    unknown = current.with_name("unknown-current.docx")
+    unknown.write_bytes(current.read_bytes() + b"\xff")
+    with pytest.raises(UnicodeDecodeError):
+        policy.public_text(unknown)

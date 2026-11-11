@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "repository": "container-runtime-security-lab",
+  "runtimeVersion": "1.1.0",
+  "runtimeSource": "98ba4864a547428d7c41ba83a85e74a7a42bfd7b",
+  "createdAt": "2026-11-11T12:54:44.246Z",
+  "author": "Jason Stys",
+  "document": "windows-application-guide-1.1.0.docx",
+  "sha256": "38da7ce0ea1e7dd00207ef00b39a3d5c19752d476b028869597b3b75dddb4b3b",
+  "screenshots": [
+    {
+      "file": "owner-unknown-review.png",
+      "sha256": "414fe2aa16f380872df5017ac0c17605f8160a43ac5af5444f75eb9bb5ce4c09",
+      "width": 1276,
+      "height": 899,
+      "caption": "The installed app presents normalized source evidence and local review context while retaining original coverage limits."
+    },
+    {
+      "file": "selected-evidence.png",
+      "sha256": "0e2695845fa24f31da3354049cc5e8f3aadad43b6ccb717490bd8d8a429b42ba",
+      "width": 1276,
+      "height": 899,
+      "caption": "Original normalized alerts include source types and pseudonymous workload identities. The status distinguishes five unique alerts and one duplicate from the supplied observation scope."
+    }
+  ],
+  "snippets": [
+    {
+      "file": "runtime_lab/desktop_project.py",
+      "first": 248,
+      "last": 258,
+      "sha256": "3896f5168eb8addae5d1f152e6e2ed4dcef92ffba0b4ab9b27e365763073424e",
+      "url": "https://github.com/JasonStys/container-runtime-security-lab/blob/98ba4864a547428d7c41ba83a85e74a7a42bfd7b/runtime_lab/desktop_project.py#L248"
+    }
+  ],
+  "observedTests": [
+    {
+      "name": "Actual installed native journeys",
+      "observed": "Two installed launches passed nine workflows, nine exact saved bundles, invalid-input preservation and normal exits.",
+      "result": "Passed"
+    },
+    {
+      "name": "Original engines and security",
+      "observed": "Original normalized-alert, source-health, grouping and triage tests, actual Falco/kernel integration on the disposable CI runner where configured, privacy checks and processed CodeQL passed on exact main.",
+      "result": "Passed"
+    },
+    {
+      "name": "Package and runtime identity",
+      "observed": "Five independently downloaded assets matched provider SHA-256. Actual installed bytes and source/runtime identities matched the reviewed clean-main proof.",
+      "result": "Passed"
+    },
+    {
+      "name": "Launch and privacy boundary",
+      "observed": "Individual Desktop and Start-menu link targets passed read-back. Installed EXEs were exercised separately with synthetic profiles; normal default-profile shortcut activation was not independently exercised.",
+      "result": "Passed"
+    }
+  ],
+  "visualReview": {
+    "approved": true,
+    "reviewer": "audit_space_drone",
+    "ooxmlSchema": "passed",
+    "pages": [
+      {
+        "page": 1,
+        "sha256": "ad69736e1f433dc8080dd0246891448a8acdbb94cf12f592f2518ebda09ea908"
+      },
+      {
+        "page": 2,
+        "sha256": "f82ae162fbd95a90ee6e7ac7a9b3b6e58368c2a7607ca90a7bee50de6205eeff"
+      },
+      {
+        "page": 3,
+        "sha256": "72ccb4cec5b1034e2a6a5b414eef138cebdd810feb5bf9a6f8d372c17931ac22"
+      },
+      {
+        "page": 4,
+        "sha256": "d5dd9cc48278269ae8ed08eaa29253697f8fae2478d1c37bfe98093b646c6876"
+      }
+    ],
+    "scope": "Every final page individually reviewed; only exact identical pixel hashes carry prior inspection. Screenshots show actual installed synthetic workflows.",
+    "checkedUtc": "2026-11-11T13:36:09.202668+00:00"
+  }
+}

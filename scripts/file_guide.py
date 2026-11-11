@@ -4,27 +4,27 @@
 # variable: BEGIN — line 36
 # variable: END — line 36
 # variable: SPECIAL — line 37
-# definition: purpose — line 60
-# parameter: name — line 60
-# variable: text — line 64
-# variable: lines — line 69
-# variable: index — line 70
-# variable: line — line 70
-# variable: description — line 72
-# variable: continuation — line 74
-# variable: description — line 80
-# definition: main — line 85
-# variable: parser — line 87
-# variable: args — line 89
-# variable: names — line 90
-# variable: rows — line 98
-# variable: name — line 99
-# variable: label — line 100
-# variable: path — line 102
-# variable: original — line 103
-# variable: end — line 104
-# variable: start — line 104
-# variable: expected — line 105
+# definition: purpose — line 62
+# parameter: name — line 62
+# variable: text — line 66
+# variable: lines — line 71
+# variable: index — line 72
+# variable: line — line 72
+# variable: description — line 74
+# variable: continuation — line 76
+# variable: description — line 82
+# definition: main — line 87
+# variable: parser — line 89
+# variable: args — line 91
+# variable: names — line 92
+# variable: rows — line 100
+# variable: name — line 101
+# variable: label — line 102
+# variable: path — line 104
+# variable: original — line 105
+# variable: end — line 106
+# variable: start — line 106
+# variable: expected — line 107
 # END CODE MAP
 
 import argparse
@@ -35,6 +35,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BEGIN, END = "<!-- BEGIN FILE GUIDE -->", "<!-- END FILE GUIDE -->"
 SPECIAL = {
+    "docs/reports/windows-application-guide-1.1.0.docx": "Current illustrated installed workbench guide with actual screenshots, exact source and measured limits.",
+    "docs/reports/windows-application-guide-1.1.0.json": "Current Word, screenshot, immutable source and reviewed-page digests.",
     "examples/desktop/episode-alerts.jsonl": "Fictional repeated-object and duplicate Falco-shaped inputs for the normal desktop workflow.",
     "examples/desktop/health-current.json": "Explicit fictional source-health observations for repeated-object review.",
     "examples/desktop/health-drops.json": "Fictional incomplete/dropped-source assertions that forbid inferred continuity.",

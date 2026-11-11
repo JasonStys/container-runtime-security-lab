@@ -38,7 +38,7 @@ After creating a normal private review, reuse its saved **pseudonymized** `revie
 python -m runtime_lab.episodes --review out/review-01/review.json --gap-seconds 30 --output out/episode-review
 ```
 
-Open `episodes.html` for a readable rule/time/count/continuity/disposition table and exact evidence details. Continuous-source observations with the same rule, scope and object may group within an inclusive1–300second gap. Any source-level drop/incomplete/health gap prevents grouping that source: individual observations remain separate because the exact missing interval is unknown. Every original alert, priority, duplicate count and source gap remains in the output.
+Open `episodes.html` for a readable rule/time/count/continuity/disposition table and exact evidence details. Continuous-source observations with the same rule, scope and object may group within an inclusive gap of 1–300 seconds. Any source-level drop/incomplete/health gap prevents grouping that source: individual observations remain separate because the exact missing interval is unknown. Every original alert, priority, duplicate count and source gap remains in the output.
 
 Fill a private copy of `triage-template.json` with `investigate`, `expected_activity`, `false_positive` or `needs_context` and a meaningful reason, then rerun with `--triage <private-file>` into a new directory. Missing entries stay unreviewed. Wrong saved-review hashes, unknown/duplicate episode IDs, changed grouping IDs and blank reasons reject. A disposition is a local analyst assertion; it cannot suppress original detections or manufacture a clean result. The command returns1 while original alerts/gaps exist, even if every episode is reviewed.
 

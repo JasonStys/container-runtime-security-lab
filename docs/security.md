@@ -17,3 +17,9 @@ No listener, external alert forwarding, user accounts, public multiuser applicat
 Public evidence is synthetic or summary-only. Do not attach real audit/alert streams to public issues. See SECURITY.md for reporting.
 
 Raw native metrics can include runner hostname/network metadata even with optional utilization counters disabled. Metrics stay in ignored out/ on the disposable runner; only allowlisted numeric counter summaries are printed/published. Kernel/output counter sampling must span fixture completion; it is not authenticated whole-host evidence.
+
+## Desktop inputs, state and lifecycle
+
+The GUI reviews supplied observations; it neither runs Falco nor starts Docker, a driver, host capture, a cluster or live enforcement. The original real Falco/kernel CI lanes remain independent. Health is an operator assertion, not sensor authentication; no alerts/status0 never proves safety. A false-positive/expected-activity disposition does not remove detections, infer compromise or close coverage gaps.
+
+Stable descriptor reads reject linked/nonregular inputs and detect replacement/growth. Profile admission checks all fixed mutable slots before writes and keeps genuine recovery sidecars. One owner lock remains held while analysis and save drain; no ordinary close abandons a thread. Profiles/exports are private plaintext OS-owner state. Treat imported observations, clocks and dispositions as assertions rather than authenticated provenance. Runtime resource/DLL hashes bind package bytes to recorded source metadata; they are not publisher signing or security certification.

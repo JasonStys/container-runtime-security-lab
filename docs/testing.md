@@ -15,3 +15,7 @@ CI matrix: Ubuntu 24.04 Python 3.12/3.14; Windows Python 3.14; macOS Intel Pytho
 Combined Python runtime statement/branch coverage gate 95%; scripts/native binaries/rules/Bash/kernel coverage not included. Native observations are reported separately. Property tests are bounded; passing tests are not complete security proof.
 
 Limitations retained as explicit negative oracles: Metadata-only pod records, JSONPatch, exact-hostPath subpaths. No actual Kubernetes cluster/audit webhook transport is provisioned/tested. No claim of zero real-world false negatives or production readiness.
+
+## Actual Windows portable acceptance
+
+The new Windows job builds the complete patched Python/Tk portable and invokes `scripts/test_native_app.py`. It drives nine real workflows, external supported input selection, independently stated domain oracles, visible minimum layout, original details, actual notices, exact export and invalid-input preservation; a second actual process must reopen all nine exact bundles and both owned PIDs must exit. Presentation-unit doubles do not establish native UI behavior. Source tests exercise actual core semantics, hardlink/nonregular fixed-state admission, ordinary WAL/hot-journal recovery and stable bounded input reads. All original tests, coverage floors, benchmarks and independent native lanes remain mandatory. No local Docker/live collector is invoked; exact later hosted outcomes must be checked, not inferred from source or historical Office editions.

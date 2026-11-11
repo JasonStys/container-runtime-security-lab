@@ -17,3 +17,7 @@ Alternative: implement detector conditions in Python. Rejected because it would 
 Consequences: native detection only on Linux CI, portable evidence review on Windows/Linux/macOS. Kubernetes replay verifies API detection semantics, not live cluster audit transport/admission. Container probes verify actual syscall capture, not container-escape prevention. Modern eBPF/root authority exists only on the disposable runner; this is not a claim of unprivileged host monitoring.
 
 Source-health declarations are explicit inputs, not cryptographically authenticated attestations. Missing/stale/empty/dropped/incomplete sources are review gaps. No alerts means no alerts observed, not secure state.
+
+## Native owner-local workbench — 2026-11-11
+
+`desktop.py` owns the actual Tk controls and one retained worker; `desktop_project.py` maps those settings to the original offline core. `desktop_state.py` owns pre-initialization profile admission, an exclusive lock and bounded immutable SQLite bundles; `inputs.py` supplies stable nonblocking bounded descriptor reads. `desktop_io.py` enforces finite/duplicate-free JSON. Review authorized Falco JSONL, declared source health and a selected policy/as-of time through the original privacy/coverage engine. Group exact saved normalized reviews into continuity-aware episodes and record reasoned local dispositions without suppressing original alerts or gaps. The desktop has no active collection/enforcement path. Source and portable entrypoints use the same domain adapter; package identity is checked before durable state opens.

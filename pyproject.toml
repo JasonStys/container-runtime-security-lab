@@ -1,7 +1,7 @@
 # Jason Stys: zero-dependency offline runtime, strict types and combined statement/branch coverage.
 [project]
 name = "container-runtime-security-lab"
-version = "1.0.0"
+version = "1.1.0"
 description = "Falco runtime detection evidence by Jason Stys"
 requires-python = ">=3.12"
 dependencies = []
